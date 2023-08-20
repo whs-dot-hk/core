@@ -67,7 +67,8 @@ let
         let here = attrPath ++ [n]; in
         if length values == 1
         || pred here (elemAt values 1) (head values) then
-          if attrPath == ["__std" "ci"] then
+          if attrPath == ["__std" "ci"]
+          || attrPath == ["__std" "init"] then
             flatten values
           else
             head values
