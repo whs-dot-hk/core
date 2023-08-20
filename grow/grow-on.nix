@@ -51,8 +51,37 @@ Example use:
 }
 ```
 */
+let
+  inherit (builtins) head;
+  inherit (builtins) isAttrs;
+  inherit (builtins) length;
+  inherit (l.lists) elemAt;
+  inherit (l.lists) flatten;
+
+  recursiveUpdateUntil =
+    pred:
+    lhs:
+    rhs:
+    let f = attrPath:
+      l.zipAttrsWith (n: values:
+        let here = attrPath ++ [n]; in
+        if length values == 1
+        || pred here (elemAt values 1) (head values) then
+          if attrPath == ["__std" "ci"] then
+            flatten values
+          else
+            head values
+        else
+          f here values
+      );
+    in f [] [rhs lhs];
+  recursiveUpdate =
+    lhs:
+    rhs:
+    recursiveUpdateUntil (path: lhs: rhs: !(isAttrs lhs && isAttrs rhs)) lhs rhs;
+in
 args:
 grow args
 // {
-  __functor = l.flip l.recursiveUpdate;
+  __functor = l.flip recursiveUpdate;
 }
