@@ -71,12 +71,11 @@ let
     rhs:
     let f = attrPath:
       l.zipAttrsWith (n: values:
-        let here = attrPath ++ [n]; in
-        if length values == 1 then
-          head values
-        else
-          let a = g here (elemAt values 1) (head values) values; in
-          if head a then
+      let
+        a = g here (elemAt values 1) (head values) values;
+        here = attrPath ++ [n];
+      in
+        if length values == 1 || head a then
             elemAt a 1
           else
             f here values
