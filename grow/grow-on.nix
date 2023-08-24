@@ -74,7 +74,7 @@ let
         if length values == 1 then
           head values
         else
-          let a = pred here (elemAt values 1) (head values) values; in
+          let a = g here (elemAt values 1) (head values) values; in
           if head a then
             tail a
           else
