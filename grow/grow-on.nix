@@ -57,6 +57,7 @@ let
   inherit (builtins) length;
   inherit (l.lists) elemAt;
   inherit (l.lists) flatten;
+  inherit (l.lists) take;
 
   g = p: l: r: v: let
     attrPath = take 2 p;
