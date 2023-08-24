@@ -65,7 +65,7 @@ let
     let f = attrPath:
       l.zipAttrsWith (n: values:
         let here = attrPath ++ [n]; in
-        if length values == 1
+        if length values == 1 then
           head values
         else if pred here (elemAt values 1) (head values) then
           if attrPath == ["__std" "ci"]
