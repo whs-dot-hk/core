@@ -58,8 +58,14 @@ let
   inherit (l.lists) elemAt;
   inherit (l.lists) flatten;
 
+  g = p: l: r: v: let
+    attrPath = take 2 p;
+    v1 = !(isAttrs l && isAttrs r);
+    v2 = if attrPath == ["__std" "ci"] || attrPath == ["__std" "init"] then flatten v else head v;
+  in [v1 v2];
+
   recursiveUpdateUntil =
-    pred:
+    g:
     lhs:
     rhs:
     let f = attrPath:
@@ -67,20 +73,18 @@ let
         let here = attrPath ++ [n]; in
         if length values == 1 then
           head values
-        else if pred here (elemAt values 1) (head values) then
-          if attrPath == ["__std" "ci"]
-          || attrPath == ["__std" "init"] then
-            flatten values
-          else
-            head values
         else
-          f here values
+          let a = pred here (elemAt values 1) (head values) values; in
+          if head a then
+            tail a
+          else
+            f here values
       );
     in f [] [rhs lhs];
   recursiveUpdate =
     lhs:
     rhs:
-    recursiveUpdateUntil (path: lhs: rhs: !(isAttrs lhs && isAttrs rhs)) lhs rhs;
+    recursiveUpdateUntil g lhs rhs;
 in
 args:
 grow args
