@@ -66,7 +66,8 @@ let
       l.zipAttrsWith (n: values:
         let here = attrPath ++ [n]; in
         if length values == 1
-        || pred here (elemAt values 1) (head values) then
+          head values
+        else if pred here (elemAt values 1) (head values) then
           if attrPath == ["__std" "ci"]
           || attrPath == ["__std" "init"] then
             flatten values
