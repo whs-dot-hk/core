@@ -76,7 +76,7 @@ let
         else
           let a = g here (elemAt values 1) (head values) values; in
           if head a then
-            tail a
+            elemAt a 1
           else
             f here values
       );
